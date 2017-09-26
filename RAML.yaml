@@ -1,0 +1,2334 @@
+#%RAML 1.0
+title: "Syncwerk RESTful API"
+description: "Allmost all API calls must be authenticated with a token."
+version: "2.1.0"
+protocols:
+- "HTTPS"
+baseUri: "https://{serverAddress}"
+mediaType:
+- "application/json"
+annotationTypes:
+  x-restlet: "any"
+securitySchemes:
+  Token Authorization:
+    type: "x-custom"
+    describedBy:
+      headers:
+        Authorization:
+          type: "string"
+          required: false
+securedBy:
+- "Token Authorization"
+/api2/shared-repos/{repoId}/?share_type=public&permission=rw:
+  uriParameters:
+    repoId:
+      type: "string"
+/api/v2.1/repos/{repoId}/trash/?scan_stat={commitId}:
+  uriParameters:
+    repoId:
+      type: "string"
+    commitId:
+      type: "string"
+/api/v2.1/share-links/?repo_id={repoId}&path={filePath}:
+  uriParameters:
+    repoId:
+      type: "string"
+    filePath:
+      type: "string"
+/{fileserverOnPort8082}/upload-api/{uploadLinkToken}?ret-json=1:
+  uriParameters:
+    fileserverOnPort8082:
+      type: "string"
+    uploadLinkToken:
+      type: "string"
+/api2/auth/ping/:
+  get:
+    displayName: "Authorized Ping"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      401:
+        description: "Invalid Token"
+        body:
+          type: "object"
+          description: "{\"detail\":\"Invalid token\"}"
+  (x-restlet):
+    section: "Quick Start"
+/api2/auth-token/:
+  post:
+    displayName: "Obtain Authentication Token"
+    body:
+      type: "array"
+      items:
+        type: "string"
+      example:
+        displayName: "application/json"
+        value: "{ \"username\":\"{userEmail}\",\"password\":\"{userPassword}\" }"
+        strict: false
+    responses:
+      200:
+        description: "Status 200"
+        body:
+          type: "object"
+          example:
+            value: "{\"token\":\"410979a810e5d8ed0e6925b51cc3ea227e5a1ca3\"}"
+            strict: false
+  (x-restlet):
+    section: "Quick Start"
+/api2/ping/:
+  get:
+    displayName: "Anonymous Ping"
+    responses:
+      200:
+        description: "Status 200"
+        body:
+          type: "string"
+          example: "\"pong\""
+  (x-restlet):
+    section: "Quick Start"
+/api2/server-info/:
+  (x-restlet):
+    section: "Account"
+/api2/accounts/newaccount@gmail.com/:
+  (x-restlet):
+    section: "Account"
+/api2/account/info/:
+  (x-restlet):
+    section: "Account"
+/api2/events/?start=15:
+  (x-restlet):
+    section: "Starred Files"
+/api2/starredfiles/?repo_id={repoId}&p={filePath}:
+  uriParameters:
+    repoId:
+      type: "string"
+    filePath:
+      type: "string"
+  (x-restlet):
+    section: "Starred Files"
+/api2/starredfiles/:
+  get:
+    displayName: "List starred files"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Star A File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Unstar A File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Starred Files"
+/api2/groups/:
+  get:
+    displayName: "List Groups"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Group"
+/api/v2.1/groups/:
+  post:
+    displayName: "Add a Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Group"
+/api/v2.1/groups/{groupId}/:
+  uriParameters:
+    groupId:
+      type: "string"
+  get:
+    displayName: "Get Info of a Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  put:
+    displayName: "Rename a Group | Transfer a Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete a Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Group"
+/api/v2.1/groups/{groupId}/members/bulk/:
+  uriParameters:
+    groupId:
+      type: "string"
+  post:
+    displayName: "Bulk Add Group Members"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Group"
+/api/v2.1/groups/{groupId}/members/{groupMemberEmail}/:
+  uriParameters:
+    groupId:
+      type: "string"
+    groupMemberEmail:
+      type: "string"
+  get:
+    displayName: "Get Info of a Group Member"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  put:
+    displayName: "Set a Group Member Admin | Unset a Group Member Admin"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete a Group Member"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Group"
+/api/v2.1/groups/{groupId}/members/:
+  uriParameters:
+    groupId:
+      type: "string"
+  get:
+    displayName: "List All Group Members"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Add a Group Member"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Group"
+/api/v2.1/groups/{groupId}/members/{userEmail}/:
+  uriParameters:
+    groupId:
+      type: "string"
+    userEmail:
+      type: "string"
+  delete:
+    displayName: "Quit Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Group"
+/api2/groups/{group_id}/discussions/:
+  uriParameters:
+    group_id:
+      type: "string"
+  get:
+    displayName: "Get Group Messages"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Send A Group Message"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Group"
+/api2/groups/{groupId}/discussions/{discussionId}/:
+  uriParameters:
+    groupId:
+      type: "string"
+    discussionId:
+      type: "string"
+  delete:
+    displayName: "Delete A Group Message"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Group"
+/api/v2.1/share-links/:
+  get:
+    displayName: "List all Share Links"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Create Share Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api/v2.1/share-links/?repo_id={repoId}:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "List Share Links of a Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api/v2.1/share-links/?repo_id={repoId}&path={folderOrFilePath}:
+  uriParameters:
+    repoId:
+      type: "string"
+    folderOrFilePath:
+      type: "string"
+  get:
+    displayName: "List Share Link of a Folder(File)"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api/v2.1/share-links/{userToken}/:
+  uriParameters:
+    userToken:
+      type: "string"
+  delete:
+    displayName: "Delete Share Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/send-share-link/:
+  post:
+    displayName: "Send Share Link Email"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/d/{userToken}/dir/:
+  uriParameters:
+    userToken:
+      type: "string"
+  get:
+    displayName: "List Direntry in Dir Download Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api/v2.1/upload-links/:
+  get:
+    displayName: "List Upload Links"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Create Upload Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api/v2.1/upload-links/{userToken}/:
+  uriParameters:
+    userToken:
+      type: "string"
+  delete:
+    displayName: "Delete Upload Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/send-upload-link/:
+  post:
+    displayName: "Send Upload Link Email"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/repos/{repoId}/dir/shared_items/?p=/&share_type=user:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "List User Shared Libraries"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/repos/{repoId}/dir/shared_items/?p=/&share_type=group:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "List Group Shared Libraries"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/beshared-repos/:
+  get:
+    displayName: "List Be Shared Libraries"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/beshared-repos/{repoId}/?share_type=personal&from={fromUserEmail}:
+  uriParameters:
+    repoId:
+      type: "string"
+    fromUserEmail:
+      type: "string"
+  delete:
+    displayName: "Delete Be Shared Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/repos/{repoId}/dir/shared_items/?p=/:
+  uriParameters:
+    repoId:
+      type: "string"
+  put:
+    displayName: "Share a Library to User | Share a Library to Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/repos/{repoId}/dir/shared_items/?p=/&share_type=user&{userEmail}:
+  uriParameters:
+    repoId:
+      type: "string"
+    userEmail:
+      type: "string"
+  post:
+    displayName: "Update Permission of User Shared Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Unshare a Library from User"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/repos/{repoId}/dir/shared_items/?p=/&share_type=group&group_id={groupId}:
+  uriParameters:
+    repoId:
+      type: "string"
+    groupId:
+      type: "string"
+  post:
+    displayName: "Update Permission of Group Shared Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Unshare a Library from Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api/v2.1/repos/batch/:
+  post:
+    displayName: "Batch Share Libraries to User | Batch Share Libraries to Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/repos/{repoId}/dir/shared_items/?p={path}:
+  uriParameters:
+    repoId:
+      type: "string"
+    path:
+      type: "string"
+  put:
+    displayName: "Share A Folder to User | Share A Folder to Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api/v2.1/shared-folders/:
+  get:
+    displayName: "List Shared Folders"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/repos/{repoId}/dir/shared_items/?p=/asd&share_type=user&{userEmail}:
+  uriParameters:
+    repoId:
+      type: "string"
+    userEmail:
+      type: "string"
+  post:
+    displayName: "Update Shared Folder Permission"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/repos/{repoId}/dir/shared_items/?p=/asd&share_type=group&group_id={groupId}:
+  uriParameters:
+    repoId:
+      type: "string"
+    groupId:
+      type: "string"
+  post:
+    displayName: "Unshare A Folder"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Share"
+/api2/repos/{repoId}/group-folder-perm/?folder_path={folderPath}:
+  uriParameters:
+    repoId:
+      type: "string"
+    folderPath:
+      type: "string"
+  get:
+    displayName: "Get User Folder Permission | Get Group Folder Permission"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Folder Permission"
+/api2/repos/{repoId}/user-folder-perm/:
+  uriParameters:
+    repoId:
+      type: "string"
+  put:
+    displayName: "Modify User Folder Permission"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Set User Folder Permission"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete User Folder Permission"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Folder Permission"
+/api2/repos/{repoId}/group-folder-perm/:
+  uriParameters:
+    repoId:
+      type: "string"
+  put:
+    displayName: "Modify Group Folder Permission"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Set Group Folder Permission"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete Group Folder Permission"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Folder Permission"
+/api2/repos/{repoId}/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Library Info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Decrypt Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/default-repo:
+  get:
+    displayName: "Get Default Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Create Default Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/?type={type}:
+  uriParameters:
+    type:
+      type: "string"
+      enum:
+      - "mine"
+      - "shared"
+      - "group"
+      - "org"
+      example: "mine"
+  get:
+    displayName: "List Libraries"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/owner/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Library Owner"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  put:
+    displayName: "Transfer Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api/v2.1/repos/{repoId}/history/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Library History"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api/v2.1/repos/{repoId}/trash/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Library Trash"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/history-limit/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Library History Limit Days | Set Library History Limit Days"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/:
+  post:
+    displayName: "Create Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/dir/sub_repo/?p=/\&name=sub_lib:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Check/Create Sub Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/op=rename:
+  uriParameters:
+    repoId:
+      type: "string"
+  post:
+    displayName: "Rename Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/public/:
+  post:
+    displayName: "Create Public Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/shared-repos/{repoId}/?share_type=public:
+  uriParameters:
+    repoId:
+      type: "string"
+  put:
+    displayName: "Set Exist Lib as Public Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Remove Public Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/download-info/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Fetch library download info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+? /api2/search/?q=syncwerk&search_repo=all&search_ftypes=custom&ftype=Document&input_fexts=md,png&per_page=3&page=3&with_permission=true
+: get:
+    displayName: "Search Files in Libraries"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/download-shared-links/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Library Download Links"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/upload-shared-links/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Library Upload Links"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/download-shared-links/105f108fb6/:
+  uriParameters:
+    repoId:
+      type: "string"
+  delete:
+    displayName: "Delete Library Download Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/upload-shared-links/f1e49d445a/:
+  uriParameters:
+    repoId:
+      type: "string"
+  delete:
+    displayName: "Delete Library Upload Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/repos/{repoId}/owa-file/?path=/foo.docx:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "View File Through Owa | Sample request for view"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/owa-file/?path=/foo.docx&action=edit:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "View File Through Owa | Sample request for edit"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/file/?p=/foo.c&reuse=1:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Download File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/file/detail/?p=/foo.c:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get File Detail"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/file/history/?p=/foo.c:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get File History"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api/v2.1/repos/{repoId}/file/?p=/1.md:
+  uriParameters:
+    repoId:
+      type: "string"
+  post:
+    displayName: "Restore File From History"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/file/revision/?p=/foo.c\&commit_id=a1ec20709675f4dc8db825cdbca296be245d189b:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Download File From a Revision"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api/v2.1/repos/{repoId}/file/?p=/test.xlsx:
+  uriParameters:
+    repoId:
+      type: "string"
+  post:
+    displayName: "Create File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/file/?p=/foo.c:
+  uriParameters:
+    repoId:
+      type: "string"
+  post:
+    displayName: "Rename File | Move File | Copy File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/file/:
+  uriParameters:
+    repoId:
+      type: "string"
+  put:
+    displayName: "Lock File | Unlock File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/file/revert/:
+  uriParameters:
+    repoId:
+      type: "string"
+  put:
+    displayName: "Revert File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/upload-link/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Upload Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/{fileserverOnPort8082}/upload-api/{uploadLinkToken}:
+  uriParameters:
+    fileserverOnPort8082:
+      type: "string"
+    uploadLinkToken:
+      type: "string"
+  post:
+    displayName: "Upload File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/9{repoId}/update-link/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Update Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/{fileserverOnPort8082}/update-api/e69e5ee7-9329-4f42-bf1b-12879bd72c28:
+  uriParameters:
+    fileserverOnPort8082:
+      type: "string"
+  post:
+    displayName: "Update File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/upload-blks-link/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Upload Blocks Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/update-blks-link/:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Update Blocks Link"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "File"
+/api2/repos/{repoId}/dir/?p=/foo:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "List Directory Entries"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Create New Directory | Rename Directory"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete Directory"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Directory"
+/api2/repos/{repoId}/dir/?t=d&recursive=1:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Request recursive dir list of a folder."
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Directory"
+/api/v2.1/repos/{repoId}/zip-task/?parent_dir=/&dirents=my_dir_name:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Task Token"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Directory"
+/api2/repos/{repoId}/dir/revert/:
+  uriParameters:
+    repoId:
+      type: "string"
+  put:
+    displayName: "Revert Directory"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Directory"
+/api/v2.1/query-zip-progress/?token=b2272645-35ee-44ce-8f68-07c022107015:
+  get:
+    displayName: "Query Task Progress"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Directory"
+/api/v2.1/copy-move-task/:
+  post:
+    displayName: "Get Task Id"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Cancel Task"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Asynchronously Copy/Move File/Directory"
+/api/v2.1/query-copy-move-progress/?task_id=d1ca2b8c-8ab8-4dd4-8ad7-842130764484:
+  get:
+    displayName: "Query Progress"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Asynchronously Copy/Move File/Directory"
+/api2/repos/{AUTHTOKEN}/fileops/copy/?p=/1/test-2:
+  uriParameters:
+    AUTHTOKEN:
+      type: "string"
+  post:
+    displayName: "Copy"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Multiple Files / Directories"
+/api2/repos/{AUTHTOKEN}/fileops/move/?p=/1/test-2:
+  uriParameters:
+    AUTHTOKEN:
+      type: "string"
+  post:
+    displayName: "Move"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Multiple Files / Directories"
+/api2/repos/{repoId}/fileops/delete/?p=src_path:
+  uriParameters:
+    repoId:
+      type: "string"
+  delete:
+    displayName: "Delete"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Multiple Files / Directories"
+/api/v2.1/repos/{repoId}/zip-task/?parent_dir=/&dirents=my_dir_name&dirents=my_file_name:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Task Token"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Multiple Files / Directories"
+/api/v2.1/user-avatar/:
+  post:
+    displayName: "Update User Avatar"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Avatar"
+/api2/avatars/user/user@example.com/resized/80/:
+  get:
+    displayName: "Get User Avatar"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Avatar"
+/api2/avatars/group/1/resized/80:
+  get:
+    displayName: "Get Group Avatar"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Avatar"
+/api2/devices/:
+  get:
+    displayName: "Get User Devices"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Unlink User Device"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Devices"
+/api/v2.1/revision-tags/tag-names/:
+  get:
+    displayName: "Get Snapshot Label"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Snapshot Label"
+/api/v2.1/revision-tags/tagged-items/:
+  put:
+    displayName: "Update Snapshot Label"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Create New Snapshot Label"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Snapshot Label"
+/api2/events/:
+  get:
+    displayName: "Get File Activities"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Get File Activities"
+/api2/repos/{repoId}/thumbnail/?p=/5.jpg\&size=123 > thumbnail.png:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Thumbnail Image"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Get Thumbnail Image"
+/api2/search-user/?q=foo:
+  get:
+    displayName: "Search User"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Search User"
+/api2/accounts/:
+  get:
+    displayName: "List Accounts"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api2/accounts/{email}/:
+  uriParameters:
+    email:
+      type: "string"
+  get:
+    displayName: "Get Account Info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  put:
+    displayName: "Create Account | Update Account"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Migrate Account"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete Account"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/devices/?platform=desktop&page=1&per_page=50:
+  get:
+    displayName: "Get Desktop Devices"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/devices/?platform=mobile&page=1&per_page=50:
+  get:
+    displayName: "Get Mobile Devices"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/devices/:
+  delete:
+    displayName: "Unlink User Device"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/device-errors/:
+  get:
+    displayName: "Get Device Errors"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Clean Device Errors"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/revision-tags/tagged-items/?repo_id={repoId}&tag_contains=v:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Snapshots by Label"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/default-library/{userEmail}:
+  uriParameters:
+    userEmail:
+      type: "string"
+  get:
+    displayName: "Get User Default Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/default-library/:
+  post:
+    displayName: "Create User Default Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/libraries/?page=1&per_page=100:
+  get:
+    displayName: "Get all Libraries"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/libraries/?name=file:
+  get:
+    displayName: "Search Library by Name"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/libraries/?owner=lian@lian.com:
+  get:
+    displayName: "Search Library by Owner"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/libraries/{repoId}/:
+  uriParameters:
+    repoId:
+      type: "string"
+  put:
+    displayName: "Transfer a Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete a Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/libraries/{repoId}/dirents/?parent_dir=/asd:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Library Dirents"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/shares/?repo_id={repoId}&share_type=user:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Repo User Shares"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/shares/?repo_id={repoId}&share_type=group:
+  uriParameters:
+    repoId:
+      type: "string"
+  get:
+    displayName: "Get Repo Group Shares"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/shares/:
+  put:
+    displayName: "Modify Repo User Share Permission | Modify Repo Group Share Permission"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  post:
+    displayName: "Share Repo to User | Share Repo to Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  delete:
+    displayName: "Delete Repo User Share | Delete Repo Group Share"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/groups/?page=1&per_page=100:
+  get:
+    displayName: "Get all groups"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/groups/1486/:
+  delete:
+    displayName: "Delete a Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/groups/1528/:
+  put:
+    displayName: "Transfer a Group"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/groups/64/libraries/:
+  get:
+    displayName: "Get Group Libraries"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/groups/64/libraries/{repoId}/:
+  uriParameters:
+    repoId:
+      type: "string"
+  delete:
+    displayName: "Delete Group Library"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/groups/64/members/:
+  get:
+    displayName: "Get Group Members"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/groups/64/members/foo@foo.com/:
+  delete:
+    displayName: "Delete Group Member"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/groups/65/members/:
+  post:
+    displayName: "Add Group Member"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/groups/65/members/3@1.com/:
+  put:
+    displayName: "Update Group Member Role | Unset a group member as admin"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/share-links/db62f56baf1b4460996e/:
+  get:
+    displayName: "Get Shared File/Dir Info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/share-links/db62f56baf1b4460996e/dirents/?path=/sdf:
+  get:
+    displayName: "Get Sub File/Dir List in Shared Dir"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/share-links/db62f56baf1b4460996e/download/?path=/sdf&type=folder:
+  get:
+    displayName: "Download File/Dir"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/share-links/db62f56baf1b4460996e/download/?path=/sdf/12.docx&type=file:
+  get:
+    displayName: "Sample request for download (sub) file in shared dir"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/share-links/dac219add64f4a4b9c51/download/:
+  get:
+    displayName: "Sample request for download shared file"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/share-links/db62f56baf1b4460996e/check-password/:
+  get:
+    displayName: "Check Password"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/upload-links/360fe7d6dc684045b7f6/:
+  get:
+    displayName: "Get Shared Dir Info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/upload-links/360fe7d6dc684045b7f6/upload/:
+  get:
+    displayName: "Upload"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/upload-links/360fe7d6dc684045b7f6/check-password/:
+  get:
+    displayName: "Check Password"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/logs/login/?start=2016-03-20&end=2016-03-31:
+  get:
+    displayName: "Get Login Log"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/logs/file-audit/?start=2016-03-20&end=2016-03-31:
+  get:
+    displayName: "Get File Audit Log"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/logs/file-update/?start=2016-03-20&end=2016-03-31:
+  get:
+    displayName: "Get File Update Log"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/logs/perm-audit/?start=2016-03-20&end=2016-03-31:
+  get:
+    displayName: "Get Permission Audit Log"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api2/organization/:
+  post:
+    displayName: "Add Organization"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/organizations/1/users/6@org.com/:
+  get:
+    displayName: "Get Organization User Info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  put:
+    displayName: "Updage Organization User Info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+/api/v2.1/admin/organizations/160/users/6@org.com/:
+  delete:
+    displayName: "Delete Organization User"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {adminToken}"
+    responses:
+      200:
+        description: "Status 200"
+  (x-restlet):
+    section: "Admin Only"
+(x-restlet):
+  sections:
+    API Basics:
+      description: "Allmost all API calls must be authenticated with a valid Syncwerk\
+        \ API key.\n\n## Example\n```\ncurl -H 'Authorization: Token 24fd3c026886e3121b2ca630805ed425c272cb96'\
+        \ https://app.syncwerk.de/api2/auth/ping/\n```\n\nThe API key can be retrieved\
+        \ by the obtain auth api. See the Quick Start for details."
+    Status Code:
+      description: "* 200: OK\n* 201: CREATED\n* 202: ACCEPTED\n* 301: MOVED_PERMANENTLY\n\
+        * 400: BAD_REQUEST\n* 403: FORBIDDEN\n* 404: NOT_FOUND\n* 409: CONFLICT\n\
+        * 429: TOO_MANY_REQUESTS\n* 440: REPO_PASSWD_REQUIRED\n* 441: REPO_PASSWD_MAGIC_REQUIRED\n\
+        * 500: INTERNAL_SERVER_ERROR\n* 520: OPERATION_FAILED"
+    Quick Start: {}
+    Account: {}
+    Starred Files: {}
+    Group: {}
+    Share: {}
+    Folder Permission: {}
+    Library: {}
+    File: {}
+    Directory: {}
+    Asynchronously Copy/Move File/Directory: {}
+    Multiple Files / Directories: {}
+    Avatar: {}
+    Devices: {}
+    Snapshot Label: {}
+    Get File Activities: {}
+    Get Thumbnail Image: {}
+    Search User: {}
+    Admin Only: {}
+  texts:
+    d1lcfy9:
+      title: "File Share Link"
+      section: "Share"
+    9jcws62:
+      title: "Upload Link"
+      section: "Share"
+    zn5tkah:
+      title: "Shared Libraries"
+      section: "Share"
+    e47xtj1:
+      title: "Shared Folders"
+      section: "Share"
+    usiyghl:
+      title: "User Folder Permission"
+      section: "Folder Permission"
+    v2fr5dl:
+      title: "Group Folder Permission"
+      section: "Folder Permission"
+    q9skk3c:
+      title: "Update file"
+      section: "File"
+    n1jx2wy:
+      title: "Upload File"
+      section: "File"
+    jk82mwu:
+      title: "Account"
+      section: "Admin Only"
+    g48kqup:
+      title: "Devices"
+      section: "Admin Only"
+    xr2n1g3:
+      title: "Get Snapshots by Label"
+      section: "Admin Only"
+    3xpu6lw:
+      title: "Default Library"
+      section: "Admin Only"
+    bqomgol:
+      title: "Libraries"
+      section: "Admin Only"
+    mciqihs:
+      title: "Shares"
+      section: "Admin Only"
+    fhov6gz:
+      title: "Groups"
+      section: "Admin Only"
+    dzlh2rr:
+      title: "Shared Links"
+      section: "Admin Only"
+    ubitr1u:
+      title: "Download Links"
+      section: "Admin Only"
+    ol0ybe9:
+      title: "Upload Links"
+      section: "Admin Only"
+    nkvlh0e:
+      title: "Log"
+      section: "Admin Only"
+    0cl6uqc:
+      title: "Organization"
+      section: "Admin Only"
