@@ -19,28 +19,6 @@ securitySchemes:
           required: false
 securedBy:
 - "Token Authorization"
-/api2/shared-repos/{repoId}/?share_type=public&permission=rw:
-  uriParameters:
-    repoId:
-      type: "string"
-/api/v2.1/repos/{repoId}/trash/?scan_stat={commitId}:
-  uriParameters:
-    repoId:
-      type: "string"
-    commitId:
-      type: "string"
-/api/v2.1/share-links/?repo_id={repoId}&path={filePath}:
-  uriParameters:
-    repoId:
-      type: "string"
-    filePath:
-      type: "string"
-/{fileserverOnPort8082}/upload-api/{uploadLinkToken}?ret-json=1:
-  uriParameters:
-    fileserverOnPort8082:
-      type: "string"
-    uploadLinkToken:
-      type: "string"
 /api2/auth/ping/:
   get:
     displayName: "Authorized Ping"
@@ -88,13 +66,16 @@ securedBy:
           example: "\"pong\""
   (x-restlet):
     section: "Quick Start"
-/api2/server-info/:
-  (x-restlet):
-    section: "Account"
-/api2/accounts/newaccount@gmail.com/:
-  (x-restlet):
-    section: "Account"
 /api2/account/info/:
+  get:
+    displayName: "Check Account Info"
+  (x-restlet):
+    section: "Account"
+/api2/server-info/:
+  get:
+    displayName: "Get Server Information"
+    securedBy:
+    - null
   (x-restlet):
     section: "Account"
 /api2/events/?start=15:
@@ -868,6 +849,16 @@ securedBy:
         description: "Status 200"
   (x-restlet):
     section: "Library"
+/api/v2.1/repos/{repoId}/trash/?scan_stat={commitId}:
+  uriParameters:
+    repoId:
+      type: "string"
+    commitId:
+      type: "string"
+  get:
+    displayName: "Get more trash items"
+  (x-restlet):
+    section: "Library"
 /api/v2.1/repos/{repoId}/trash/:
   uriParameters:
     repoId:
@@ -950,6 +941,12 @@ securedBy:
     responses:
       200:
         description: "Status 200"
+  (x-restlet):
+    section: "Library"
+/api2/shared-repos/{repoId}/?share_type=public&permission=rw:
+  uriParameters:
+    repoId:
+      type: "string"
   (x-restlet):
     section: "Library"
 /api2/shared-repos/{repoId}/?share_type=public:
@@ -1250,6 +1247,16 @@ securedBy:
     responses:
       200:
         description: "Status 200"
+  (x-restlet):
+    section: "File"
+/{fileserverOnPort8082}/upload-api/{uploadLinkToken}?ret-json=1:
+  uriParameters:
+    fileserverOnPort8082:
+      type: "string"
+    uploadLinkToken:
+      type: "string"
+  post:
+    displayName: "Upload File - Return JSON"
   (x-restlet):
     section: "File"
 /{fileserverOnPort8082}/upload-api/{uploadLinkToken}:
@@ -2255,6 +2262,8 @@ securedBy:
         * 500: INTERNAL_SERVER_ERROR\n* 520: OPERATION_FAILED"
     Quick Start: {}
     Account: {}
+    Above sections are cleaned:
+      description: "Move this to the bottom of the last finished section"
     Starred Files: {}
     Group: {}
     Share: {}
