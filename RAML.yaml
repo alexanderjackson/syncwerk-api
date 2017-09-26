@@ -16,7 +16,9 @@ securitySchemes:
       headers:
         Authorization:
           type: "string"
-          required: false
+          example: "Token {userToken}"
+  Basic authentication:
+    type: "Basic Authentication"
 securedBy:
 - "Token Authorization"
 /api2/auth/ping/:
@@ -27,11 +29,31 @@ securedBy:
         type: "string"
         example: "Token {userToken}"
     responses:
-      401:
-        description: "Invalid Token"
+      200:
         body:
-          type: "object"
+          type: "string"
+          example: "\"pong\""
+      401:
+        body:
+          type: "string"
           description: "{\"detail\":\"Invalid token\"}"
+          example: "{\n\"detail\": \"Invalid token\"\n}"
+  options:
+    displayName: "Auth Ping"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        body:
+          type: "string"
+          example: "{\n\"name\": \"Auth Ping\",\n\"description\": \"Returns a simple\
+            \ `pong` message when client provided an auth token.\\nFor example:\\\
+            n curl -H \\\"Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b\\\
+            \" http://127.0.0.1:8000/api2/auth/ping/\",\n\"renders\":[\n\"application/json\"\
+            ,\n\"text/html\"\n],\n\"parses\":[\n\"application/json\",\n\"application/x-www-form-urlencoded\"\
+            ,\n\"multipart/form-data\"\n]\n}"
   (x-restlet):
     section: "Quick Start"
 /api2/auth-token/:
@@ -49,10 +71,28 @@ securedBy:
       200:
         description: "Status 200"
         body:
-          type: "object"
-          example:
-            value: "{\"token\":\"410979a810e5d8ed0e6925b51cc3ea227e5a1ca3\"}"
-            strict: false
+          type: "string"
+          example: "{\n\"token\": \"410979a810e5d8ed0e6925b51cc3ea227e5a1ca3\"\n}"
+      400:
+        body:
+          type: "string"
+          example: "{\n\"non_field_errors\":[\n\"Unable to login with provided credentials.\"\
+            \n]\n}"
+    securedBy:
+    - null
+  options:
+    displayName: "Obtain Auth Token"
+    responses:
+      200:
+        body:
+          type: "string"
+          example: "{\n\"name\": \"Obtain Auth Token\",\n\"description\": \"Returns\
+            \ auth token if username and password are valid.\\nFor example:\\n curl\
+            \ -d \\\"username=foo@example.com&password=123456\\\" http://127.0.0.1:8000/api2/auth-token/\"\
+            ,\n\"renders\":[\n\"application/json\"\n],\n\"parses\":[\n\"application/x-www-form-urlencoded\"\
+            ,\n\"multipart/form-data\",\n\"application/json\"\n]\n}"
+    securedBy:
+    - null
   (x-restlet):
     section: "Quick Start"
 /api2/ping/:
@@ -64,18 +104,73 @@ securedBy:
         body:
           type: "string"
           example: "\"pong\""
+    securedBy:
+    - null
   (x-restlet):
     section: "Quick Start"
 /api2/account/info/:
   get:
     displayName: "Check Account Info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        body:
+          type: "string"
+          example: "{\n\"login_id\": \"\",\n\"name\": \"admin\",\n\"institution\"\
+            : \"\",\n\"department\": \"\",\n\"contact_email\": \"\",\n\"usage\": 21036917,\n\
+            \"total\": -2,\n\"email\": \"admin@syncwerk.com\"\n}"
+      401:
+        body:
+          type: "string"
+          example: "{\n\"detail\": \"Invalid token\"\n}"
+  options:
+    displayName: "Account Info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        body:
+          type: "string"
+          example: "{\n\"name\": \"Account Info\",\n\"description\": \"Show account\
+            \ info.\",\n\"renders\":[\"application/json\", \"text/html\"],\n\"parses\"\
+            :[\n\"application/json\",\n\"application/x-www-form-urlencoded\",\n\"\
+            multipart/form-data\"\n]\n}"
   (x-restlet):
     section: "Account"
 /api2/server-info/:
   get:
     displayName: "Get Server Information"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        body:
+          type: "string"
+          example: "{\n\"version\": \"6.1.1\",\n\"features\":[\n\"seafile-basic\"\n\
+            ]\n}"
     securedBy:
     - null
+  options:
+    displayName: "Server Info"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        body:
+          type: "string"
+          example: "{\n\"name\": \"Server Info\",\n\"description\": \"Returns the\
+            \ server info (version, supported features).\",\n\"renders\":[\n\"application/json\"\
+            ,\n\"text/html\"\n],\n\"parses\":[\n\"application/json\",\n\"application/x-www-form-urlencoded\"\
+            ,\n\"multipart/form-data\"\n]\n}"
   (x-restlet):
     section: "Account"
 /api2/events/?start=15:
@@ -99,24 +194,110 @@ securedBy:
     responses:
       200:
         description: "Status 200"
+        body:
+          type: "string"
+          example: "[\n{\n\"file_name\": \"2.md\",\n\"icon_path\": \"24/txt.png\"\
+            ,\n\"oid\": \"0000000000000000000000000000000000000000\",\n\"mtime_relative\"\
+            : \"<time datetime=\\\"2017-09-26T16:45:48\\\" is=\\\"relative-time\\\"\
+            \ title=\\\"Di, 26 Sep 2017 16:45:48 +0000\\\" >vor 9 Sekunden</time>\"\
+            ,\n\"repo\": \"40fb0b59-984d-4c0b-a26e-c8771a9e1220\",\n\"org\": -1,\n\
+            \"path\": \"/2.md\",\n\"size\": 0,\n\"repo_id\": \"40fb0b59-984d-4c0b-a26e-c8771a9e1220\"\
+            ,\n\"mtime\": 1506444348,\n\"dir\": false,\n\"repo_name\": \"2132e\"\n\
+            },\n{\n\"file_name\": \"1.JPG\",\n\"icon_path\": \"24/pic.png\",\n\"oid\"\
+            : \"7a59bd0f3839a9b8f41557c546d39a933dfd6849\",\n\"mtime_relative\": \"\
+            <time datetime=\\\"2017-09-13T10:34:04\\\" is=\\\"relative-time\\\" title=\\\
+            \"Mi, 13 Sep 2017 10:34:04 +0000\\\" >vor 13 Tagen</time>\",\n\"repo\"\
+            : \"9f95003d-6741-42dc-87c3-f9e8dad3369b\",\n\"org\": -1,\n\"path\": \"\
+            /1.JPG\",\n\"size\": 2700788,\n\"repo_id\": \"9f95003d-6741-42dc-87c3-f9e8dad3369b\"\
+            ,\n\"mtime\": 1505298844,\n\"dir\": false,\n\"repo_name\": \"demo\"\n\
+            }\n]"
+      401:
+        body:
+          type: "string"
+          example: "{\n\"detail\": \"Invalid token\"\n}"
+      403:
+        body:
+          type: "file"
+          example:
+            value: "{ \"detail\": \"Authentication credentials were not provided.\"\
+              \ }"
+            strict: false
   post:
     displayName: "Star A File"
     headers:
       Authorization:
         type: "string"
         example: "Token {userToken}"
+    body:
+      application/x-www-form-urlencoded:
+        type: "object"
+        properties:
+          repo_id:
+            type: "string"
+            example: "{repoId}"
+          p:
+            type: "string"
+            example: "{filePath}"
     responses:
-      200:
-        description: "Status 200"
+      201:
+        body:
+          type: "string"
+          example: "\"success\""
+      400:
+        body:
+          type: "string"
+          examples:
+            example: "{\n\"error_msg\": \"Library ID or path is missing.\"\n}"
+            example1: "{\n\"detail\": \"Invalid token\"\n}"
   delete:
     displayName: "Unstar A File"
+    queryParameters:
+      repo_id:
+        type: "string"
+        example: "{repoId}"
+      p:
+        type: "string"
+        example: "{filePath}"
     headers:
       Authorization:
         type: "string"
         example: "Token {userToken}"
     responses:
       200:
-        description: "Status 200"
+        body:
+          type: "string"
+          example: "\"success\""
+      400:
+        body:
+          type: "string"
+          example: "{\n\"error_msg\": \"Library ID or path is missing.\"\n}"
+      401:
+        body:
+          type: "string"
+          example: "{\n\"detail\": \"Invalid token\"\n}"
+      500:
+        body:
+          type: "string"
+          example: "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n    \"http://www.w3.org/TR/html4/strict.dtd\"\
+            >\n<html lang=\"en\">\n<head>\n    <title>Page unavailable</title>\n</head>\n\
+            <body>\n    <h1>Page unavailable</h1>\n\n    <p>Sorry, but the requested\
+            \ page is unavailable due to a\n    server hiccup.</p>\n\n    <p>Our engineers\
+            \ have been notified, so check back later.</p>\n</body>\n</html>"
+  options:
+    displayName: "Starred File"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
+    responses:
+      200:
+        body:
+          type: "string"
+          example: "{\n\"name\": \"Starred File\",\n\"description\": \"Support uniform\
+            \ interface for starred file operation,\\nincluding add/delete/list starred\
+            \ files.\",\n\"renders\":[\n\"application/json\",\n\"text/html\"\n],\n\
+            \"parses\":[\n\"application/json\",\n\"application/x-www-form-urlencoded\"\
+            ,\n\"multipart/form-data\"\n]\n}"
   (x-restlet):
     section: "Starred Files"
 /api2/groups/:
@@ -857,6 +1038,10 @@ securedBy:
       type: "string"
   get:
     displayName: "Get more trash items"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
   (x-restlet):
     section: "Library"
 /api/v2.1/repos/{repoId}/trash/:
@@ -1257,6 +1442,10 @@ securedBy:
       type: "string"
   post:
     displayName: "Upload File - Return JSON"
+    headers:
+      Authorization:
+        type: "string"
+        example: "Token {userToken}"
   (x-restlet):
     section: "File"
 /{fileserverOnPort8082}/upload-api/{uploadLinkToken}:
